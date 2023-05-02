@@ -18,6 +18,18 @@ socket.onmessage = function(event) {
             // console.log(content, pubkeyShortened, formattedTime);
             console.log(content);
             // TODO: Show polls
+            var div = document.createElement('div');
+            div.setAttribute('class', 'container');
+            div.innerHTML = `
+                <div class="parent">
+                    <div class="child">${a}</div>
+                    <div class="child">+</div>
+                    <div class="child">${b}</div>
+                    <div class="child">=</div>
+                    <div class="child">${a + b}</div>
+                </div>
+            `;
+            document.getElementById('polls-container').appendChild(div);
         }
     } else {
         // infoContainer.innerHTML = data[2].content;
