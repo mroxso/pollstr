@@ -8,6 +8,7 @@ socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     if (data[0] === "EVENT") {
         if(data[2].kind === 6969) {
+            const id = data[2].id;
             const content = data[2].content;
             const tags = [];
             for (const tag of data[2].tags) {
@@ -35,16 +36,21 @@ socket.onmessage = function(event) {
             divBtnGroup.setAttribute('class', 'btn-group');
             for(const tag of tags) {
                 divBtnGroup.innerHTML +=
-                `<button type="button" class="btn btn-sm btn-outline-secondary">${tag}</button>`;
+                `<button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='nostr://${id}';">${tag}</button>`;
             }
             var smallText = document.createElement('small');
             smallText.setAttribute('class', 'text-body-secondary');
             smallText.innerHTML = formattedTime;
 
+            var smallTextId = document.createElement('small');
+            smallTextId.setAttribute('class', 'text-body-secondary');
+            smallTextId.innerHTML = id;
+
             divBtnFlex.appendChild(divBtnGroup);
             divBtnFlex.appendChild(smallText);
             divCardBody.appendChild(pCardText);
             divCardBody.appendChild(divBtnFlex);
+            divCardBody.appendChild(smallTextId);
 
             divCard.appendChild(divCardBody);
             divCol.appendChild(divCard);
