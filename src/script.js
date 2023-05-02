@@ -6,38 +6,47 @@ socket.onopen = function(event) {
 
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
-    // console.log(data);
     if (data[0] === "EVENT") {
         if(data[2].kind === 6969) {
             const content = data[2].content;
+            const tags = [];
+            for (const tag of data[2].tags) {
+                if (tag[0] === "poll_option") {
+                    // console.log(tag[2]);
+                    tags.push(tag[2]);
+                }
+            }
+            // console.log(tags);
             const pubkey = data[2].pubkey;
             const pubkeyShortened = `${pubkey.slice(0, 3)}...${pubkey.slice(-3)}`;
             const createdAt = data[2].created_at;
             const date = new Date(createdAt * 1000);
             const formattedTime = date.toLocaleString();
-            // console.log(content, pubkeyShortened, formattedTime);
-            console.log(content);
             // TODO: Show polls
-            var div = document.createElement('div');
-            div.setAttribute('class', 'col');
-            div.innerHTML = `
-                <div class="card shadow-sm">
-                    <!-- <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> -->
-                    <div class="card-body">
-                        <p class="card-text">${content}.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Yes</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">No</button>
-                            </div>
-                            <small class="text-body-secondary">${formattedTime}</small>
-                        </div>
+            var divCol = document.createElement('div');
+            divCol.setAttribute('class', 'col');
+            var divCard = document.createElement('div');
+            divCard.setAttribute('class', 'card shadow-sm');
+            var divCardBody = document.createElement('div');
+            divCardBody.setAttribute('class', 'card-body');
+            
+            divCardBody.innerHTML = `
+                <p class="card-text">${content}.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        `
+                        for(const tag of tags) {
+                            divCardBody.innerHTML +=
+                            `<button type="button" class="btn btn-sm btn-outline-secondary">${tag}</button>`;
+                        }
+                        `
                     </div>
+                    <small class="text-body-secondary">${formattedTime}</small>
                 </div>
             `;
-            document.getElementById('polls-row').appendChild(div);
+            divCard.appendChild(divCardBody);
+            divCol.appendChild(divCard);
+            document.getElementById('polls-row').appendChild(divCol);
         }
-    } else {
-        // infoContainer.innerHTML = data[2].content;
     }
 };
