@@ -42,10 +42,15 @@ socket.onmessage = function(event) {
             smallText.setAttribute('class', 'text-body-secondary');
             smallText.innerHTML = formattedTime;
 
+            var smallTextId = document.createElement('small');
+            smallTextId.setAttribute('class', 'text-body-secondary');
+            smallTextId.innerHTML = id;
+
             divBtnFlex.appendChild(divBtnGroup);
             divBtnFlex.appendChild(smallText);
             divCardBody.appendChild(pCardText);
             divCardBody.appendChild(divBtnFlex);
+            divCardBody.appendChild(smallTextId);
 
             divCard.appendChild(divCardBody);
             divCol.appendChild(divCard);
