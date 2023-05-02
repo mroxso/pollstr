@@ -30,7 +30,7 @@ socket.onmessage = function(event) {
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Yes</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary">No</button>
                             </div>
-                            <small class="text-body-secondary">9 mins</small>
+                            <small class="text-body-secondary">${formattedTime}</small>
                         </div>
                     </div>
                 </div>
