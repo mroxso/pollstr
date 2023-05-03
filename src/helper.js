@@ -7,6 +7,28 @@ async function nostrLogin() {
     return pubkey;
 }
 
+async function nostrSignEvent(eventId, option) {
+    const e = 
+    {
+      "kind": 9734,
+      "created_at": Date.now(),
+      "tags": [
+        ["e", eventId],
+        // ["p", "<32-bytes hex of the recipient's key>, <primary poll host relay URL>"],
+        ["poll_option", option]
+      ],
+      // "ots": "<base64-encoded OTS file data>",
+      "content": "",
+    };
+
+    console.log("--- REQUEST SIGNING EVENT ---")
+    console.log(e);
+    const responseEvent = await window.nostr.signEvent(e);
+    console.log("--- SIGNED EVENT ---")
+    console.log(responseEvent);
+    return responseEvent;
+}
+
 async function nostrGetUserinfo(pubkey) {
     const relay = new WebSocket('wss://relay.damus.io');
     let name = "";
