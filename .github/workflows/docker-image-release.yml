@@ -1,0 +1,46 @@
+name: Docker Image Release
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+env:
+  REGISTRY_NAME: ghcr.io
+  IMAGE_NAME: pollstr
+
+jobs:
+  image:
+    name: Building and Pushing the Docker Image
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Collecting Metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY_NAME }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+
+      - name: Building And Pushing Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
