@@ -7,7 +7,7 @@ async function nostrLogin() {
     return pubkey;
 }
 
-async function nostrSignEvent(eventId, option) {
+async function nostrSignEventZapRequest(eventId, option) {
     const e = 
     {
       "kind": 9734,
@@ -26,7 +26,29 @@ async function nostrSignEvent(eventId, option) {
     const responseEvent = await window.nostr.signEvent(e);
     console.log("--- SIGNED EVENT ---")
     console.log(responseEvent);
+    nostrSendEventZapRequest(responseEvent);
     return responseEvent;
+}
+
+async function nostrSendEventZapRequest(signedEvent) {
+    const relay = new WebSocket('wss://relay.damus.io');
+
+    relay.onopen = function(event) {
+        console.log("--- SENDING EVENT ---");
+        command = '["EVENT", '+JSON.stringify(signedEvent)+']';
+        console.log(command);
+        relay.send(command);
+        console.log("--- SENT EVENT ---")
+    };
+    relay.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        console.log(data);
+        if (data[0] === "EVENT") {
+            console.log(" --> "+data);
+        } else if (data[0] === "EOSE") {
+            relay.close();
+        }
+    }
 }
 
 async function nostrGetUserinfo(pubkey) {
@@ -34,7 +56,7 @@ async function nostrGetUserinfo(pubkey) {
     let name = "";
 
     relay.onopen = function(event) {
-        relay.send('["REQ", "133742070", {"kinds": [0], "authors": ["'+pubkey+'"]}]'); // TODO: Build correct Request
+        relay.send('["REQ", "133742070", {"kinds": [0], "authors": ["'+pubkey+'"]}]');
     };
     relay.onmessage = function(event) {
         const data = JSON.parse(event.data);

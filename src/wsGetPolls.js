@@ -37,7 +37,7 @@ socket.onmessage = function(event) {
             let optionCount = 0;
             for(const tag of tags) {
                 divBtnGroup.innerHTML +=
-                `<button type="button" class="btn btn-sm btn-outline-secondary" onclick="nostrSignEvent('${id}',${optionCount});">${tag}</button>`;
+                `<button type="button" class="btn btn-sm btn-outline-secondary" onclick="nostrSignEventZapRequest('${id}',${optionCount});">${tag}</button>`;
                 optionCount++;
             }
             var smallText = document.createElement('small');
