@@ -7,15 +7,16 @@ async function nostrLogin() {
     return pubkey;
 }
 
-async function nostrSignEventZapRequest(eventId, option) {
+async function nostrSignEventZapRequest(eventId, option, pubkey) {
     const e = 
     {
       "kind": 9734,
       "created_at": Date.now(),
       "tags": [
         ["e", eventId],
+        ["p", pubkey],
         // ["p", "<32-bytes hex of the recipient's key>, <primary poll host relay URL>"],
-        ["poll_option", option]
+        ["poll_option", option],
       ],
       // "ots": "<base64-encoded OTS file data>",
       "content": "",
