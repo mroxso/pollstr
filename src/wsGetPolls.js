@@ -34,9 +34,11 @@ socket.onmessage = function(event) {
             divBtnFlex.setAttribute('class', 'd-flex justify-content-between align-items-center');
             var divBtnGroup = document.createElement('div');
             divBtnGroup.setAttribute('class', 'btn-group');
+            let optionCount = 0;
             for(const tag of tags) {
                 divBtnGroup.innerHTML +=
-                `<button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='nostr://${id}';">${tag}</button>`;
+                `<button type="button" class="btn btn-sm btn-outline-secondary" onclick="nostrSignEventZapRequest('${id}',${optionCount},'${pubkey}');">${tag}</button>`;
+                optionCount++;
             }
             var smallText = document.createElement('small');
             smallText.setAttribute('class', 'text-body-secondary');
